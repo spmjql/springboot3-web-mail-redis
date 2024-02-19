@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		<input type="text" id="email" placeholder="이메일" />
+		<button type="button" id="btn-email-send">인증번호 발송</button>
+		<div id="email-auth-view" style="display: none;">
+			<input type="text" id="email-auth" placeholder="인증번호 입력" />
+			<button type="button">확인</button>
+		</div>
+	</form>
+	<script>
+		document.addEventListener('DOMContentLoaded', ()=>{
+			document.querySelector('#btn-email-send').addEventListener('click',mailSendClicked);
+		})
+		function mailSendClicked() {
+			const toEmail=document.querySelector('#email').value.trim();
+			
+			fetch('/email-auth',{
+				method: 'POST', 
+				headers: {'Content-Type': 'text/plain'},
+				body: toEmail
+				})
+			.then(success=>{return success.json()})
+			.then(data=>{
+				console.log("메일전송 완료" + data)
+				document.querySelector("#email-auth-view").style.display="block";
+			})
+			.catch(error=>{
+				console.error("메일전송 에러", error)
+			});
+		}
+	</script>
+</body>
+</html>
